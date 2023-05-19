@@ -4,6 +4,7 @@
  */
 package Menu;
 
+import User.GUI_ManagerUser;
 import java.awt.Color;
 
 /**
@@ -64,6 +65,11 @@ public class GUI_Menu extends javax.swing.JFrame {
         btnTK.setIcon(new javax.swing.ImageIcon("D:\\Java\\BTL_JAVA_N3\\N3_Application\\src\\img\\UserLogo.png")); // NOI18N
         btnTK.setText("Quản lý tài khoản");
         btnTK.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnTK.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnTKActionPerformed(evt);
+            }
+        });
 
         btnLogout.setIcon(new javax.swing.ImageIcon("D:\\Java\\BTL_JAVA_N3\\N3_Application\\src\\img\\logout.png")); // NOI18N
         btnLogout.setText("Log out");
@@ -146,6 +152,13 @@ public class GUI_Menu extends javax.swing.JFrame {
         gui.setLocationRelativeTo(null);
         GUI_Menu.this.dispose();
     }//GEN-LAST:event_btnLogoutActionPerformed
+
+    private void btnTKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTKActionPerformed
+        GUI_ManagerUser gui = new GUI_ManagerUser();
+        gui.setVisible(true);
+        gui.setLocationRelativeTo(null);
+        GUI_Menu.this.dispose();
+    }//GEN-LAST:event_btnTKActionPerformed
 
     /**
      * @param args the command line arguments
