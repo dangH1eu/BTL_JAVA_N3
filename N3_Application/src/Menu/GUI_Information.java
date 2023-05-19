@@ -158,9 +158,7 @@ public class GUI_Information extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnOKActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOKActionPerformed
-        GUI_Menu gui = new GUI_Menu();
-        gui.setVisible(true);
-        gui.setLocationRelativeTo(null);
+
         GUI_Information.this.dispose();
     }//GEN-LAST:event_btnOKActionPerformed
 
