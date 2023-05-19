@@ -4,14 +4,32 @@
  */
 package User;
 
+import DBEngine.DBEngine;
 import java.awt.Color;
+import java.util.ArrayList;
+import javax.swing.JOptionPane;
+
 
 /**
  *
  * @author ExorcistV
  */
 public class GUI_ManagerUser extends javax.swing.JFrame {
-
+    DBEngine db = new DBEngine();
+    ArrayList<User> listUser = new ArrayList<>();
+    
+    public void loadData(){
+        try {
+            listUser = (ArrayList<User>) db.readFile("D:user.txt");
+        } catch (Exception err) {
+            System.out.println(err.toString());
+        }
+        
+    }
+    
+    public void loadTable(ArrayList<User> listUser){
+        tableUser.setModel(new TableUser(listUser));
+    }
     /**
      * Creates new form GUI_ManagerUser
      */
@@ -19,6 +37,9 @@ public class GUI_ManagerUser extends javax.swing.JFrame {
         initComponents();
         getContentPane().setBackground(new Color(242,242,242));
         setTitle("Manager User");
+        listUser.add(new User("N02", "Dugn", "01426666", "26/12/2002", "HA", "admin", "123", "admin"));
+        loadData();
+        loadTable(listUser);
     }
 
     /**
@@ -50,13 +71,13 @@ public class GUI_ManagerUser extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         mk = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
-        chucVu = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tableUser = new javax.swing.JTable();
         btnAdd = new javax.swing.JButton();
         btnUpdate = new javax.swing.JButton();
         btnDel = new javax.swing.JButton();
         btnExport = new javax.swing.JButton();
+        chucVu = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -96,6 +117,7 @@ public class GUI_ManagerUser extends javax.swing.JFrame {
 
         jLabel9.setText("Chức vụ:");
 
+        tableUser.setAutoCreateRowSorter(true);
         tableUser.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -121,6 +143,13 @@ public class GUI_ManagerUser extends javax.swing.JFrame {
         btnDel.setText("Xoá");
 
         btnExport.setText("Xuất CSV");
+
+        chucVu.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Master", "Admin" }));
+        chucVu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chucVuActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -166,7 +195,7 @@ public class GUI_ManagerUser extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(ngaySinh)))
                                 .addGap(29, 29, 29)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel6)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -174,19 +203,18 @@ public class GUI_ManagerUser extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(jLabel9)
                                         .addGap(18, 18, 18)
-                                        .addComponent(chucVu))))
-                            .addComponent(jScrollPane1))))
+                                        .addComponent(chucVu, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jScrollPane1)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(220, 220, 220)
+                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(37, 37, 37)
+                        .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(37, 37, 37)
+                        .addComponent(btnDel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(36, 36, 36)
+                        .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(21, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(220, 220, 220)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37)
-                .addComponent(btnUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37)
-                .addComponent(btnDel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36)
-                .addComponent(btnExport, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -243,8 +271,38 @@ public class GUI_ManagerUser extends javax.swing.JFrame {
     }//GEN-LAST:event_ngaySinhActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
-        // TODO add your handling code here:
+        String userCode = maNV.getText();
+        String userName = hoTen.getText();
+        String phoneNumber = sdt.getText();
+        String dateBirth = ngaySinh.getText();
+        String address = queQuan.getText();
+        String account = tk.getText();
+        String password = mk.getText();
+        String role = chucVu.getSelectedItem().toString();
+        int count = 0;
+        User user = new User(userCode, userName, phoneNumber, dateBirth, address, account, password, role);
+        try {
+            for(User o: listUser){
+                if(user.getTaiKhoan().compareToIgnoreCase(o.getTaiKhoan()) == 0){
+                    if(listUser.contains(o)){
+                        JOptionPane.showMessageDialog(this,"Tài khoản đã tồn tại!");
+                        count++;
+                    }
+                }
+            }
+            if(count != 0) {
+                listUser.add(user);
+                db.saveFile("D:user.txt", listUser);
+            }
+            loadTable(listUser);
+        } catch (Exception err) {
+            JOptionPane.showMessageDialog(this,err.toString(), "Lỗi!", JOptionPane.ERROR);
+        }
     }//GEN-LAST:event_btnAddActionPerformed
+
+    private void chucVuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chucVuActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_chucVuActionPerformed
 
     /**
      * @param args the command line arguments
@@ -289,7 +347,7 @@ public class GUI_ManagerUser extends javax.swing.JFrame {
     private javax.swing.JButton btnUpdate;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> cbxSearch;
-    private javax.swing.JTextField chucVu;
+    private javax.swing.JComboBox<String> chucVu;
     private javax.swing.JTextField hoTen;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

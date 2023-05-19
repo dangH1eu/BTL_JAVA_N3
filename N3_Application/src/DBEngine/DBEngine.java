@@ -9,7 +9,7 @@ import java.io.*;
  * @author ExorcistV
  */
 public class DBEngine {
-    public static void saveFile(String fileName, Object obj) throws Exception {
+    public void saveFile(String fileName, Object obj) throws Exception {
         FileOutputStream fo = new FileOutputStream(fileName);
         ObjectOutputStream oos = new ObjectOutputStream(fo);
         oos.writeObject(obj);
