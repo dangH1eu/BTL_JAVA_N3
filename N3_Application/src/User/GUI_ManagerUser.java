@@ -9,22 +9,23 @@ import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 
-
 /**
  *
  * @author ExorcistV
  */
 public class GUI_ManagerUser extends javax.swing.JFrame {
+    String fileName = "D:user.txt";
     DBEngine db = new DBEngine();
     ArrayList<User> listUser = new ArrayList<>();
     
     public void loadData(){
+//        listUser.add(new User("N02", "Dugn", "01426666", "26/12/2002", "HA", "admin", "123", "admin"));
+//        listUser.add(new User("N01", "Dugn", "01426666", "26/12/2002", "HA", "admin2", "123", "admin"));
         try {
-            listUser = (ArrayList<User>) db.readFile("D:user.txt");
+            listUser = (ArrayList<User>) db.readFile(fileName);
         } catch (Exception err) {
             System.out.println(err.toString());
         }
-        
     }
     
     public void loadTable(ArrayList<User> listUser){
@@ -37,7 +38,6 @@ public class GUI_ManagerUser extends javax.swing.JFrame {
         initComponents();
         getContentPane().setBackground(new Color(242,242,242));
         setTitle("Manager User");
-        listUser.add(new User("N02", "Dugn", "01426666", "26/12/2002", "HA", "admin", "123", "admin"));
         loadData();
         loadTable(listUser);
     }
@@ -282,19 +282,13 @@ public class GUI_ManagerUser extends javax.swing.JFrame {
         int count = 0;
         User user = new User(userCode, userName, phoneNumber, dateBirth, address, account, password, role);
         try {
-            for(User o: listUser){
-                if(user.getTaiKhoan().compareToIgnoreCase(o.getTaiKhoan()) == 0){
-                    if(listUser.contains(o)){
-                        JOptionPane.showMessageDialog(this,"Tài khoản đã tồn tại!");
-                        count++;
-                    }
-                }
-            }
-            if(count != 0) {
+            if(listUser.contains(user)){
+                JOptionPane.showMessageDialog(this, "Loix", "Lỗi!", JOptionPane.ERROR);
+            } else {
                 listUser.add(user);
-                db.saveFile("D:user.txt", listUser);
+                db.saveFile(fileName, listUser);
+                loadTable(listUser);
             }
-            loadTable(listUser);
         } catch (Exception err) {
             JOptionPane.showMessageDialog(this,err.toString(), "Lỗi!", JOptionPane.ERROR);
         }

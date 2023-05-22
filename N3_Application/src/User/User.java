@@ -5,14 +5,14 @@
 package User;
 
 import java.util.Objects;
-
+import java.io.Serializable;
 
 
 /**
  *
  * @author ExorcistV
  */
-public class User {
+public class User implements Serializable {
     private String maNV;
     private String hoTen;
     private String soDienThoai;
