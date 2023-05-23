@@ -5,20 +5,34 @@
 package Menu;
 
 import java.awt.Color;
-
+import DBEngine.DBEngine;
+import User.User;
+import java.util.ArrayList;
 
 /**
  *
  * @author ExorcistV
  */
 public class GUI_Login extends javax.swing.JFrame {
+    ArrayList<User> listUser;
     /**
      * Creates new form GUI_Login
      */
+    public void readData(){
+        DBEngine db = new DBEngine();
+        String fileName = "D:user.txt";
+        try {
+            listUser = (ArrayList<User>) db.readFile(fileName);
+        } catch (Exception err) {
+            System.out.println(err.toString());
+        }
+    }
     public GUI_Login() {
         initComponents();
         getContentPane().setBackground(new Color(242,242,242));
         setTitle("Login");
+        readData();
+        
     }
 
     /**
@@ -111,7 +125,21 @@ public class GUI_Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        
+        String acc = inputTK.getText();
+        char[] getPass = inputMK.getPassword();
+        String pass = String.valueOf(getPass);
+//        System.out.println("ACC: " + acc);
+//        System.out.println("PASS: " + pass);
+        for(User o: listUser) {
+            if(acc.equals(o.getTaiKhoan()) && pass.equals(o.getMatKhau())){
+                GUI_Menu gui = new GUI_Menu();
+                gui.setVisible(true);
+                gui.setLocationRelativeTo(null);
+                GUI_Login.this.dispose();
+            } else {
+                System.out.println("ERROR");
+            }
+        }
     }//GEN-LAST:event_btnLoginActionPerformed
 
     /**
